@@ -1,0 +1,131 @@
+{% load staticfiles %}
+<head>
+    <title>Sign In</title>
+<style type="text/css">
+        body
+{
+  margin:0;
+  padding:0;
+  font-family: 'Ubuntu', sans-serif;
+  align-items:center;
+  height:100vh;
+  background: url("{% static 'images/accounts_bg.jpg' %}");
+}
+.login
+{
+  text-align:center;
+  width:350px;
+  border-radius:20px;
+  box-sizing:border-box;
+  padding:40px;
+  background:#000000;
+    background: rgba(0, 0, 0, 0.7);
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+.login h2
+{
+  margin: 0 0 20px;
+  padding:0;
+  font-size:30px;
+  text-transform:uppercase;
+  color: white;
+}
+.login .input-group
+{
+  position:relative;
+  width:100%;
+  margin-bottom:25px;
+    box-shadow: none;
+}
+.login .input-group input
+{
+  height:50px;
+  width:100%;
+  box-sizing:border-box;
+  font-size:18px;
+  outline:none;
+  border:1px solid #000;
+  border-radius:20px;
+  padding-left:20px;
+  padding-right:30px;
+}
+
+
+.login .input-group input[type="submit"]
+{
+  background:#279CEB;
+  border:none;
+  box-shadow: none;
+  cursor:pointer;
+  font-wight:600;
+  text-transform:uppercase;
+  color:#fff;
+}
+.login .input-group input[type="submit"]:hover
+{
+  background:#31a9f9;
+}
+.login a
+{
+  font-size:12px;
+  color:white;
+  text-decoration:none;
+  display:block;
+  text-align:center;
+
+}
+.login a span
+{
+  color:#262626;
+  font-weight:600;
+}
+.login a span:hover
+{
+  color:#ffc107;
+}
+.login span{
+    color:white;
+}
+</style>
+</head>
+
+{%if user.is_authenticated %}
+    <script>window.location.replace("{% url 'home' %}");</script>
+{% endif %}
+
+{% block content %}
+    <body>
+<div class="login">
+    {% if next %}
+        {% if user.is_authenticated %}
+            <p style="color: #FF3A3A">Your account doesn't have access.</p>
+        {% else %}
+            <p style="color: #FF3A3A">Please login to see this page.</p>
+        {% endif %}
+    {% endif %}
+  <h2>Sign In</h2>
+  <form method="post" action="{% url 'accounts:login' %}">
+      {% csrf_token %}
+    <div class="input-group">
+      <input type="text" name="username" id="id_username" required placeholder="Username">
+    </div>
+    <div class="input-group">
+      <input type="password" name="password" required id="id_password" placeholder="Password">
+    </div>
+    <div class="input-group">
+      <input type="submit" value="login">
+        <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+   </form>
+    <div class="input-group">
+    <span><a href="{% url 'accounts:sign_up' %}">Don't have an Account?</a></span>
+    </div>
+        {% if form.errors %}
+        <p style="color: #FF3A3A">Failed! Login with correct credentials.</p>
+    {% endif %}
+</div>
+</body>
+{% endblock %}
