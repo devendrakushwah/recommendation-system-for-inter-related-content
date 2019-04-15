@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>{{ movie_data.movie_title }}</title>
+  <title>{{ show_data.show_title }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
 <style type="text/css">
     @import url(https://fonts.googleapis.com/css?family=Lato:400,300,700);
@@ -257,10 +257,10 @@ a[data-tooltip][data-placement="top"]::after {
 <body>
   <div class="movie-card">
   <div class="container">
-    <img src="{{ movie_data.movie_link }}" width="187px" height="282px" alt="cover" class="cover" />
+    <img src="{{ show_data.show_link }}" width="187px" height="282px" alt="cover" class="cover" />
     <div class="hero">
       <div class="details">
-        <div class="title1">{{ movie_data.movie_title }}</div>
+        <div class="title1">{{ show_data.show_title }}</div>
             <fieldset class="rating">
             <input onclick="rateAjax(this.value)" type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="5 stars"></label>
             <input onclick="rateAjax(this.value)" type="radio" id="star4half" name="rating" value="4.5" /><label class="half" for="star4half" title="4.5 stars"></label>
@@ -274,22 +274,40 @@ a[data-tooltip][data-placement="top"]::after {
             <input onclick="rateAjax(this.value)" type="radio" id="starhalf" name="rating" value="0.5" /><label class="half" for="starhalf" title="0.5 stars"></label>
           </fieldset>
 
-        <span class="likes">IMdb Rating &nbsp;{{movie_data.imdb_rating}}</span>
+        <span class="likes">Avg Rating &nbsp;{{show_data.show_rating}}</span>
       <span class="likes">My Rating &nbsp;{{rating_value}}</span>
       </div> <!-- end details -->
     </div> <!-- end hero -->
     <div class="description">
             <div class="column1">
-                    <span class="tag">{{ movie_data.movie_genre }}</span>
+                    <span class="tag">{{ show_data.show_genre }}</span>
       </div> <!-- end column1 -->
       <div class="column2">
-        <p>{{ movie_data.movie_plot }}</p>
+        <p>{{ show_data.show_plot }}</p>
       </div> <!-- end column2 -->
     </div> <!-- end description -->
   </div> <!-- end container -->
 </div> <!-- end movie-card -->
+          <div class="container" style="height: 300px;width: 1000px;margin-top: 20px">
+          <div style="padding:20px;">
+            <p style="font-weight: bold;font-size: 28px;font-family:Sans-Serif">
+                Similar TV Shows to this item
+            </p>
+            <ul>
+            {% for p in similar_tvshows %}
+                        <li style="margin-left: 20px" class="inline-block">
+                            <a  href="{% url 'tvshows:detail' %}?title={{ p.show_title }}">
+                                <img src="{{ p.show_link }}" height="195px" width="130px" alt="" />
+                                <p style="width: 128px">{{ p.show_title}}</p>
+                                </a>
+                        </li>
+                <a href="{% url 'tvshows:detail' %}?title={{ p.show_title }}"></a>
+            {% endfor %}
 
-      <div class="container" style="height: 300px;width: 1000px">
+</ul>
+</div>
+      </div>
+      <div class="container" style="height: 300px;width: 1000px;margin-top: 20px">
           <div style="padding:20px;">
             <p style="font-weight: bold;font-size: 28px;font-family:Sans-Serif">
                 Similar Movies to this item
@@ -327,25 +345,6 @@ a[data-tooltip][data-placement="top"]::after {
 </ul>
 </div>
       </div>
-          <div class="container" style="height: 300px;width: 1000px;margin-top: 20px">
-          <div style="padding:20px;">
-            <p style="font-weight: bold;font-size: 28px;font-family:Sans-Serif">
-                Similar TV Shows to this item
-            </p>
-            <ul>
-            {% for p in similar_tvshows %}
-                        <li style="margin-left: 20px" class="inline-block">
-                            <a  href="{% url 'tvshows:detail' %}?title={{ p.show_title }}">
-                                <img src="{{ p.show_link }}" height="195px" width="130px" alt="" />
-                                <p style="width: 128px">{{ p.show_title}}</p>
-                                </a>
-                        </li>
-                <a href="{% url 'tvshows:detail' %}?title={{ p.show_title }}"></a>
-            {% endfor %}
-
-</ul>
-</div>
-      </div>
   </div>
 </body>
 </html>
@@ -354,14 +353,14 @@ a[data-tooltip][data-placement="top"]::after {
 <!--Ajax part-->
 <script type="text/javascript">
 	function rateAjax(ratingValue){
-            var url="{% url 'movies:rate' %}?movie_id={{movie_data.movie_id}}&rating="+ratingValue;
+            var url="{% url 'tvshows:rate' %}?show_id={{show_data.show_id}}&rating="+ratingValue;
 			console.log(url)
 			var req=new XMLHttpRequest();
 			req.open('GET',url)
 			req.onload=function()
 			{
 				console.log(req.responseText);
-				alert("Success. Given "+ratingValue+" rating to {{ movie_data.movie_title }}.");
+				alert("Success. Given "+ratingValue+" rating to {{ show_data.show_title }}.");
 				location.reload();
 			};
 			req.send();

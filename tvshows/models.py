@@ -15,4 +15,4 @@ class Show(models.Model):
 class Show_Rating(models.Model):
     username = models.CharField(max_length=100)
     show_id = models.CharField(max_length=100)
-    rating=models.IntegerField()
+    rating=models.FloatField()

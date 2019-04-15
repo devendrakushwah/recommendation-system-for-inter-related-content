@@ -6,6 +6,9 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 from surprise import Reader, Dataset, SVD, evaluate
 import os
+from easyRec import utils
+from books.models import Book
+from movies.models import Movie
 from tvshows.models import *
 
 data_path=os.path.abspath('datasets/tvshow_data.csv')
@@ -90,7 +93,7 @@ def similar_shows(title):
     cosine_sim = cosine_similarity(count_matrix, count_matrix)
     idx = indices[indices == title].index[0]
     score_series = pd.Series(cosine_sim[idx]).sort_values(ascending=False)
-    top_10_indexes = list(score_series.iloc[1:11].index)
+    top_10_indexes = list(score_series.iloc[1:6].index)
     ans=[]
     for i in top_10_indexes:
         ans.append(data.iloc[i].name)
@@ -131,12 +134,12 @@ def personalized_shows(username):
     return final
 
 def rate_show(username,show_id,rating):
-    qSet=Show_Rating.objects.filter(username=username,movie_id=show_id)
+    qSet=Show_Rating.objects.filter(username=username,show_id=show_id)
     if(len(qSet)==0):
         old = open(rating_path,'a')
         old.write(str(username) + "," + str(show_id) + "," + str(rating) + "\n")
         old.close()
-        obj = Show_Rating(username=str(username), movie_id=str(show_id), rating=str(rating))
+        obj = Show_Rating(username=str(username), show_id=str(show_id), rating=str(rating))
         obj.save()
     else:
         #to update rating csv file
@@ -152,3 +155,43 @@ def rate_show(username,show_id,rating):
             file.writelines(data)
             file.close()
 
+def get_similar_content(show_id):
+    items=utils.similar_items(show_id)
+    book_ids=[]
+    movie_ids=[]
+    for i in items:
+        if i[0]=='m':
+            if(len(movie_ids)!=5):
+                movie_ids.append(i)
+        elif i[0]=='b':
+            if(len(book_ids)!=5):
+                book_ids.append(i)
+        if(len(book_ids)==5 and len(movie_ids)==5):
+            break
+
+    similar_books=[]
+    similar_movies=[]
+
+    for i in book_ids:
+        qSet=Book.objects.filter(book_id=i)[0]
+        ans = {}
+        ans['book_title'] = qSet.book_title
+        ans['book_id'] = qSet.book_id
+        ans['book_plot'] = qSet.book_plot
+        ans['book_genre'] = qSet.book_genre
+        ans['book_link'] = qSet.book_link
+        ans['book_rating'] = qSet.book_rating
+        similar_books.append(ans)
+
+    for i in movie_ids:
+        qSet = Movie.objects.filter(movie_id=i)[0]
+        ans = {}
+        ans['movie_title'] = qSet.movie_title
+        ans['movie_id'] = qSet.movie_id
+        ans['movie_plot'] = qSet.movie_plot
+        ans['movie_genre'] = qSet.movie_genre
+        ans['movie_link'] = qSet.movie_link
+        ans['imdb_rating'] = qSet.imdb_rating
+        similar_movies.append(ans)
+
+    return similar_movies,similar_books

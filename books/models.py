@@ -15,4 +15,4 @@ class Book(models.Model):
 class Book_Rating(models.Model):
     username = models.CharField(max_length=100)
     book_id = models.CharField(max_length=100)
-    rating=models.IntegerField()
+    rating=models.FloatField()

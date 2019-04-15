@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from movies import movies_utils
 from movies.models import Movie_Rating
 from easyRec.utils import similar_items
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def movie_home(request):
     popular_movies=movies_utils.popular_movies()
     action=movies_utils.top_charts("Action")
@@ -28,6 +30,7 @@ def movie_home(request):
     #TODO render code
     return render(request,'movies/movies.html',data)
 
+@login_required
 def movie_detail(request):
     title=request.GET['title']
     movie_data=movies_utils.get_movie_details(title)
@@ -42,11 +45,18 @@ def movie_detail(request):
             data['already_rated'] = True
             data['rating_value']=str(q.rating)
 
+    similar_books,similar_tvshows=movies_utils.get_similar_content(movie_data['movie_id'])
+
     data['movie_data']=movie_data
     data['similar_movies']=similar_movies
+    data['similar_books']=similar_books
+    data['similar_tvshows']=similar_tvshows
+
     #TODO render code
     return render(request,'movies/movie_details.html',data)
 
+
+@login_required
 def rate_movie(request):
     username=str(request.user)
     movie_id=request.GET["movie_id"]

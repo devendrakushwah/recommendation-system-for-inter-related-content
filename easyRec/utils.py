@@ -34,7 +34,7 @@ def similar_items(item_id):
         r = Rake()
         r.extract_keywords_from_text(item_data)
         key_words_dict_scores = r.get_word_degrees()
-        data.at[index, 'key_words'] = list(key_words_dict_scores.keys())
+        row['key_words'] = list(key_words_dict_scores.keys())
     data.drop(columns=['item_data'], inplace=True)
 
     data.set_index('item_id', inplace=True)
@@ -58,7 +58,7 @@ def similar_items(item_id):
 
     score_series = pd.Series(cosine_sim[idx]).sort_values(ascending=False)
 
-    top_30_indexes = list(score_series.iloc[1:31].index)
+    top_30_indexes = list(score_series.iloc[1:51].index)
 
     ans=[]
     for i in top_30_indexes:
