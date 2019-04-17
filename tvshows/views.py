@@ -50,6 +50,7 @@ def show_detail(request):
     data['similar_tvshows']=similar_shows
     data['similar_movies']=similar_movies
     data['similar_books']=similar_books
+    data['user']=str(request.user)
 
     #TODO render code
     return render(request,'tvshows/tvshow_details.html',data)

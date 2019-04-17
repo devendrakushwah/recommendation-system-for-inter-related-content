@@ -49,6 +49,7 @@ def book_detail(request):
     data['similar_books']=similar_books
     data['similar_movies'] = similar_movies
     data['similar_tvshows'] = similar_tvshows
+    data['user']=str(request.user)
 
     #TODO render code
     return render(request,'books/book_details.html',data)

@@ -275,15 +275,14 @@
             background: rgba(58, 176, 255, 0.35);
         }
 
-        .window .main .top-bar .profile-box {
-            float: right;
-            background-color: #e74c3c;
-            box-shadow: 0px 5px 0px 0px #CE3323;
-            height: 65px;
-            line-height: 65px;
-            padding: 0 20px;
-            cursor: pointer;
-        }
+.window .main .top-bar .profile-box {
+  float: right;
+  background: #3AB0FF;
+  height: 65px;
+  line-height: 65px;
+  padding: 0 20px;
+  cursor: pointer;
+}
 
         .window .main .top-bar .profile-box .circle {
             background: #FFF;
@@ -564,7 +563,7 @@
                 <div class="top-bar">
 
                     <div class="profile-box">
-                        <a href="#" class="btn red">Red Button</a>
+                        <a href="{% url 'accounts:logout' %}" class="btn red">{{ user }} | Logout</a>
                     </div>
 
                     <ul class="top-menu">

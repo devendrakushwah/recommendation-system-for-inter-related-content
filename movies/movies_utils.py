@@ -125,6 +125,7 @@ def personalized_movies(username):
         temp.append([i.movie_id,i.movie_title,svd.predict(username,i.movie_id).est])
     temp.sort(key= lambda x:x[2],reverse=True)
     ans=[]
+    print('predicted_ratings',temp)
     rated=Movie_Rating.objects.filter(username=username)
     already_rated=[]
     for i in rated:

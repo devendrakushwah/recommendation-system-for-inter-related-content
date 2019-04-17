@@ -481,8 +481,7 @@ a:hover {
 			<div class="top-bar">
 
 				<div class="profile-box">
-					<div class="circle"></div>
-					<span class="arrow fa fa-angle-down"></span>
+                    <a href="{% url 'accounts:logout' %}" class="btn red">{{ user }} | Logout</a>
 				</div>
 
 				<ul class="top-menu">

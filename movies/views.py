@@ -24,8 +24,9 @@ def movie_home(request):
     data['romance']=romance
     data['personalized']=personalized
     data['animation']=animation
+    data['user']=str(request.user)
 
-    print(similar_items('m12'))
+    #print(similar_items('m12'))
 
     #TODO render code
     return render(request,'movies/movies.html',data)
